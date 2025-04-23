@@ -21,8 +21,7 @@ def detect_barcode_from_image(image_path):
         data = barcode.data.decode('utf-8')
         print("📦 Data:", data)
 
-        if is_url(data):
-            webbrowser.open(data)
+        return data
 
 # Example usage
 detect_barcode_from_image("./barcode_test.jpg")
