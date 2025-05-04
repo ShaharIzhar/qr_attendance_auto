@@ -68,11 +68,11 @@ async def handle_uploaded_photo(update: Update, context: ContextTypes.DEFAULT_TY
     context.user_data["photo_saved"] = True
     context.user_data["awaiting_photo"] = False
 
-    await update.message.reply_text("✅ Photo received and saved successfully!")
+    await update.message.reply_text("✅ Photo received and saved successfully! Extracting URL:")
     if(context.user_data["photo_saved"]):
         data = qr_reader.detect_barcode_from_image(file_path)
         open_url_from_data(data)
-    elif(not setup_completed): await update.message.reply_text(f"URL address invalid")
+    else: await update.message.reply_text("❌ No valid URL found in the QR code.")
 
 
 #init
@@ -100,11 +100,11 @@ async def show_user_credientals(update: Update, context: ContextTypes.DEFAULT_TY
         first_name = extract_first_name_from_username(username)
         await update.message.reply_text(f"✅ Credientals: \n First Name: {first_name} \n Username: {username} \n Password: {password} \n\n Ready for next command")
     else:
-        await update.message.reply_text(f"Setup not completed yet. For initial Setup input /setup")
+        await update.message.reply_text(f"⚠️ Setup not completed yet. For initial Setup input /setup")
 
 # Add general command handlers
 app.add_handler(CommandHandler("show_user_credientals", show_user_credientals))
-app.add_handler(CommandHandler("upload_photo", upload_photo_command))
+app.add_handler(CommandHandler("upload", upload_photo_command))
 app.add_handler(MessageHandler(filters.PHOTO, handle_uploaded_photo))
 
 def extract_first_name_from_username(username):
