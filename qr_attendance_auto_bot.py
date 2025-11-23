@@ -3,6 +3,7 @@ import subprocess
 import selenium
 from telegram import Update
 import os
+import asyncio
 import qr_reader
 import webbrowser
 from telegram.ext import (
@@ -68,7 +69,7 @@ async def handle_uploaded_photo(update: Update, context: ContextTypes.DEFAULT_TY
     context.user_data["photo_saved"] = True
     context.user_data["awaiting_photo"] = False
 
-    await update.message.reply_text("✅ Photo received and saved successfully! Extracting URL:")
+    await update.message.reply_text("✅ Photo received and saved successfully! Extracting URL...")
     if(context.user_data["photo_saved"]):
         data = qr_reader.detect_barcode_from_image(file_path)
         open_url_from_data(data)
@@ -116,4 +117,8 @@ def open_url_from_data(data):
 
 
 app.add_handler(conv_handler)
-app.run_polling()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.set_event_loop(asyncio.new_event_loop())
+    app.run_polling()
